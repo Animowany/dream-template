@@ -8,13 +8,8 @@ import cc.dreamcode.platform.DreamVersion;
 import cc.dreamcode.platform.bukkit.DreamBukkitConfig;
 import cc.dreamcode.platform.bukkit.DreamBukkitPlatform;
 import cc.dreamcode.platform.bukkit.component.ConfigurationResolver;
-import cc.dreamcode.platform.bukkit.serializer.ItemMetaSerializer;
-import cc.dreamcode.platform.bukkit.serializer.ItemStackSerializer;
 import cc.dreamcode.platform.component.ComponentService;
 import cc.dreamcode.platform.other.component.DreamCommandExtension;
-import cc.dreamcode.platform.persistence.DreamPersistence;
-import cc.dreamcode.platform.persistence.component.DocumentPersistenceResolver;
-import cc.dreamcode.platform.persistence.component.DocumentRepositoryResolver;
 import cc.dreamcode.template.command.ExampleCommand;
 import cc.dreamcode.template.command.handler.InvalidInputHandlerImpl;
 import cc.dreamcode.template.command.handler.InvalidPermissionHandlerImpl;
@@ -23,20 +18,15 @@ import cc.dreamcode.template.command.handler.InvalidUsageHandlerImpl;
 import cc.dreamcode.template.command.result.BukkitNoticeResolver;
 import cc.dreamcode.template.config.MessageConfig;
 import cc.dreamcode.template.config.PluginConfig;
-import cc.dreamcode.template.profile.ProfileRepository;
 import cc.dreamcode.utilities.adventure.AdventureProcessor;
 import cc.dreamcode.utilities.adventure.AdventureUtil;
 import cc.dreamcode.utilities.bukkit.StringColorUtil;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
-import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
-import eu.okaeri.persistence.document.DocumentPersistence;
 import eu.okaeri.tasker.bukkit.BukkitTasker;
 import lombok.Getter;
 import lombok.NonNull;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-public final class TemplatePlugin extends DreamBukkitPlatform implements DreamBukkitConfig, DreamPersistence {
+public final class TemplatePlugin extends DreamBukkitPlatform implements DreamBukkitConfig {
 
     @Getter private static TemplatePlugin instance;
 
@@ -67,19 +57,8 @@ public final class TemplatePlugin extends DreamBukkitPlatform implements DreamBu
         componentService.registerComponent(InvalidSenderHandlerImpl.class);
         componentService.registerComponent(InvalidUsageHandlerImpl.class);
 
-        componentService.registerComponent(PluginConfig.class, pluginConfig -> {
-            // register persistence + repositories
-            this.registerInjectable(pluginConfig.storageConfig);
+        componentService.registerComponent(PluginConfig.class);
 
-            componentService.registerResolver(DocumentPersistenceResolver.class);
-            componentService.registerComponent(DocumentPersistence.class);
-            componentService.registerResolver(DocumentRepositoryResolver.class);
-
-            // enable additional logs and debug messages
-            componentService.setDebug(pluginConfig.debug);
-        });
-
-        componentService.registerComponent(ProfileRepository.class);
         componentService.registerComponent(ExampleCommand.class);
     }
 
@@ -98,16 +77,6 @@ public final class TemplatePlugin extends DreamBukkitPlatform implements DreamBu
         return registry -> {
             registry.register(new BukkitNoticeSerializer());
             registry.register(new MenuBuilderSerializer());
-        };
-    }
-
-    @Override
-    public @NonNull OkaeriSerdesPack getPersistenceSerdesPack() {
-        return registry -> {
-            registry.register(new SerdesBukkit());
-
-            registry.registerExclusive(ItemStack.class, new ItemStackSerializer());
-            registry.registerExclusive(ItemMeta.class, new ItemMetaSerializer());
         };
     }
 

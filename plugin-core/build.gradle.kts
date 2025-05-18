@@ -15,7 +15,6 @@ dependencies {
     implementation("cc.dreamcode.platform:bukkit:1.13.2")
     implementation("cc.dreamcode.platform:bukkit-config:1.13.2")
     implementation("cc.dreamcode.platform:dream-command:1.13.2")
-    implementation("cc.dreamcode.platform:persistence:1.13.2")
 
     // -- dream-utilties --
     implementation("cc.dreamcode:utilities-adventure:1.5.5")
@@ -50,17 +49,5 @@ tasks.withType<ShadowJar> {
     relocate("cc.dreamcode.command", "cc.dreamcode.template.libs.cc.dreamcode.command")
     relocate("cc.dreamcode.notice", "cc.dreamcode.template.libs.cc.dreamcode.notice")
 
-    relocate("org.bson", "cc.dreamcode.template.libs.org.bson")
-    relocate("com.mongodb", "cc.dreamcode.template.libs.com.mongodb")
-    relocate("com.zaxxer", "cc.dreamcode.template.libs.com.zaxxer")
-    relocate("org.slf4j", "cc.dreamcode.template.libs.org.slf4j")
-    relocate("org.json", "cc.dreamcode.template.libs.org.json")
-    relocate("com.google.gson", "cc.dreamcode.template.libs.com.google.gson")
-
     minimize()
-
-    transform(PropertiesFileTransformer::class.java) {
-        paths.set(listOf("META-INF/native-image/org.mongodb/bson/native-image.properties"))
-        mergeStrategy.set(PropertiesFileTransformer.MergeStrategy.Append)
-    }
 }
