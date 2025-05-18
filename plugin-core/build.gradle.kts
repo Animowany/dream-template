@@ -8,11 +8,6 @@ repositories {
 }
 
 dependencies {
-    // -- bukkit-versions --
-    project(":plugin-core:nms").dependencyProject.subprojects.forEach {
-        implementation(it)
-    }
-
     // -- spigot api -- (base)
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 
@@ -62,11 +57,7 @@ tasks.withType<ShadowJar> {
     relocate("org.json", "cc.dreamcode.template.libs.org.json")
     relocate("com.google.gson", "cc.dreamcode.template.libs.com.google.gson")
 
-    minimize {
-        parent!!.project(":plugin-core:nms").subprojects.forEach {
-            exclude(project(it.path))
-        }
-    }
+    minimize()
 
     transform(PropertiesFileTransformer::class.java) {
         paths.set(listOf("META-INF/native-image/org.mongodb/bson/native-image.properties"))

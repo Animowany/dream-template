@@ -47,37 +47,6 @@ subprojects {
     }
 }
 
-project(":plugin-core:nms").subprojects {
-
-    val minor = name.split("_").getOrNull(1)?.toInt() ?: 0
-    val patch = name.split("R").getOrNull(1)?.toInt() ?: 0
-
-    if (name == "api" || minor < 17) {
-        return@subprojects
-    }
-
-    apply(plugin = "io.papermc.paperweight.userdev")
-
-    if (minor >= 21 || minor == 20 && patch >= 4) {
-        java {
-            sourceCompatibility = JavaVersion.VERSION_21
-            targetCompatibility = JavaVersion.VERSION_21
-
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
-    else {
-        java {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
-}
-
 tasks.register("pluginVersion") {
     println(project.version)
 }
